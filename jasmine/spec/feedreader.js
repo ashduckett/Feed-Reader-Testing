@@ -68,7 +68,7 @@ $(function() {
         it('should toggle visibility on clicking its menu icon', function() {
             var menuIcon = document.getElementsByClassName('menu-icon-link')[0];
             
-            // next click the menu's icon and verify that it's showing
+            // Click the menu's icon and verify that it's showing
             menuIcon.click();
             expect(bodyClassList).not.toContain('menu-hidden');
 
@@ -101,13 +101,16 @@ $(function() {
         });
 
         // Tests that the loadFeed() function actually displays some results
-        it('should have at least one entry in the .feeds container after loading', function(done) {
+        it('should have at least one entry in the .feeds container after loading', function() {
 
             // Ensure there is at least 1 feed element
-            var entryLinks = document.querySelector('.feed article.entry');
+            var entryLinks = document.querySelectorAll('.feed article.entry');
             
             // If nothing is found, this will be false since null is truthy
-            expect(entryLinks).toBeTruthy();
+            expect(entryLinks.length >= 1).toBeTruthy();
+            
+
+
         });
 
     describe('New Feed Selection', function() {
@@ -131,7 +134,7 @@ $(function() {
             }
         });
 
-        beforeEach(function (done) {
+         beforeEach(function (done) {
             if(allFeeds && allFeeds instanceof Array && allFeeds.length >= 1) {
                 loadFeed(1, function() {
                     // Grab the first item's text after some new data's been loaded
