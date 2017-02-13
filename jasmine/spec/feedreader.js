@@ -32,9 +32,6 @@ $(function() {
            each contain a value */
          it('all have a url property', function() {
             allFeeds.forEach(function(feed) {
-                // Ensure it's been defined
-                expect(feed.url).toBeDefined();
-
                 // A non-empty string will be truthy
                 expect(feed.url).toBeTruthy();
             });
@@ -45,9 +42,6 @@ $(function() {
            each contain a value */
         it('all have a name property', function() {
             allFeeds.forEach(function(feed) {
-                // Ensure it's been defined
-                expect(feed.name).toBeDefined();
-
                 // A non-empty string will be truthy
                 expect(feed.name).toBeTruthy();
             });
@@ -56,13 +50,15 @@ $(function() {
 
 
     describe('The Menu', function() {
-
+        var bodyClassList = document.body.classList;
         /* This test tests to see if the slide menu is
            hidden by default.
          */
         it('should initially hidden', function() {
             var body = document.body;
-            expect(body.classList.contains('menu-hidden')).toBeTruthy();
+
+            // First verify that the menu is hidden
+            expect(bodyClassList.contains('menu-hidden')).toBeTruthy();
         });
 
          /* This test ensures that when the menu icon is clicked, from
@@ -71,18 +67,14 @@ $(function() {
           */
         it('should toggle visibility on clicking its menu icon', function() {
             var menuIcon = document.getElementsByClassName('menu-icon-link')[0];
-
-            // First verify that the menu is hidden
-            var bodyClassList = document.body.classList;
-            expect(bodyClassList.contains('menu-hidden')).toBeTruthy();
-
+            
             // next click the menu's icon and verify that it's showing
             menuIcon.click();
-            expect(bodyClassList.contains('menu-hidden')).toBeFalsy();
+            expect(bodyClassList).not.toContain('menu-hidden');
 
             // Click it once more to see that it should be hidden again
             menuIcon.click();
-            expect(bodyClassList.contains('menu-hidden')).toBeTruthy();
+            expect(bodyClassList).toContain('menu-hidden');
 
         });
     });
@@ -105,21 +97,17 @@ $(function() {
             }
             
             // Run the async function
-            loadFeed(0, function() {
-                done();
-            });
+            loadFeed(0, done);
         });
 
         // Tests that the loadFeed() function actually displays some results
         it('should have at least one entry in the .feeds container after loading', function(done) {
 
             // Ensure there is at least 1 feed element
-            var entryLinks = document.querySelector('.feed > .entry-link');
+            var entryLinks = document.querySelector('.feed article.entry');
             
             // If nothing is found, this will be false since null is truthy
             expect(entryLinks).toBeTruthy();
-            done();
-
         });
 
     describe('New Feed Selection', function() {
@@ -143,7 +131,7 @@ $(function() {
             }
         });
 
-         beforeEach(function (done) {
+        beforeEach(function (done) {
             if(allFeeds && allFeeds instanceof Array && allFeeds.length >= 1) {
                 loadFeed(1, function() {
                     // Grab the first item's text after some new data's been loaded
@@ -162,13 +150,9 @@ $(function() {
             // Once the beforeEach() has run, we have the initial value of the first header
             // Now we can generate a new batch
             
-            // The following four tests just ensure that we have meaningful data and aren't
+            // The following two tests just ensure that we have meaningful data and aren't
             // just comparing an initial state with an aftermath state of null, in which
             // case they wouldn't be equal, but the test would pass.
-
-            // If these exist they will either be strings or empty strings
-            expect(initialFeedItem).toBeDefined();
-            expect(afterLoadFeedItem).toBeDefined();
 
             // If they are empty strings, they'll be falsy
             expect(initialFeedItem).toBeTruthy();
